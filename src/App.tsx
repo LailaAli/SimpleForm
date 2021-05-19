@@ -1,13 +1,25 @@
 import React from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
+
 import "./App.scss";
+// Components
 import { ContactForm } from "./components/ContactForm/ContactForm";
+import { UserCard } from "./components/UserCard/UserCard";
+
+// Bootstrap style
+import { Container, Row, Col } from "react-bootstrap";
 
 function App() {
    return (
-      <div>
-         <ContactForm />
-      </div>
+      <Container className="pt-5">
+         <Row>
+            <Col>
+               <ContactForm />
+            </Col>
+            <Col>
+               <UserCard email="" firstName="" lastName="" note="" />
+            </Col>
+         </Row>
+      </Container>
    );
 }
 

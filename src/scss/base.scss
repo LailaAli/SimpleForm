@@ -1,0 +1,15 @@
+html {
+   box-sizing: border-box;
+   //uncomment to convert rem = 10px
+   //  font-size: 62.5%;
+}
+*,
+*:before,
+*:after {
+   box-sizing: border-box;
+}
+
+body {
+   min-height: 100vh;
+   background: #fff;
+}

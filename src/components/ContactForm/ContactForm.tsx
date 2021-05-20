@@ -67,7 +67,7 @@ export const ContactForm: React.FC<IContactFormProps> = () => {
       <Container className="pt-5">
          <Row>
             {/* Form */}
-            <Col>
+            <Col className="col-12 col-md-6 mb-4">
                <Card>
                   <Card.Header className="text-capitalize bg-secondary text-light">
                      Add User
@@ -77,6 +77,7 @@ export const ContactForm: React.FC<IContactFormProps> = () => {
                         <Form.Group controlId="contactFormFirstName">
                            <Form.Label>First Name</Form.Label>
                            <Form.Control
+                              aria-invalid={errors.firstName ? "true" : "false"}
                               className={errors.firstName ? "error" : ""}
                               type="text"
                               {...register("firstName", {
@@ -85,7 +86,7 @@ export const ContactForm: React.FC<IContactFormProps> = () => {
                            />
                            {errors.firstName &&
                               errors.firstName.type === "required" && (
-                                 <p className="errorText">
+                                 <p className="errorText" role="alert">
                                     {errors.firstName.message}
                                  </p>
                               )}
@@ -93,6 +94,7 @@ export const ContactForm: React.FC<IContactFormProps> = () => {
                         <Form.Group controlId="contactFormLastName">
                            <Form.Label>Last Name</Form.Label>
                            <Form.Control
+                              aria-invalid={errors.lastName ? "true" : "false"}
                               className={errors.lastName ? "error" : ""}
                               type="text"
                               {...register("lastName", {
@@ -101,7 +103,7 @@ export const ContactForm: React.FC<IContactFormProps> = () => {
                            />
                            {errors.lastName &&
                               errors.lastName.type === "required" && (
-                                 <p className="errorText">
+                                 <p className="errorText" role="alert">
                                     {errors.lastName.message}
                                  </p>
                               )}
@@ -109,6 +111,7 @@ export const ContactForm: React.FC<IContactFormProps> = () => {
                         <Form.Group controlId="contactFormEmail">
                            <Form.Label>Email address</Form.Label>
                            <Form.Control
+                              aria-invalid={errors.email ? "true" : "false"}
                               className={errors.email ? "error" : ""}
                               type="email"
                               placeholder="name@example.com"
@@ -116,17 +119,17 @@ export const ContactForm: React.FC<IContactFormProps> = () => {
                                  required: "This field is required",
                               })}
                            />
-                           {errors.email &&
-                              errors.email.type === "required" && (
-                                 <p className="errorText">
-                                    {errors.email.message}
-                                 </p>
-                              )}
+                           {errors.email && errors.email.type === "required" && (
+                              <p className="errorText" role="alert">
+                                 {errors.email.message}
+                              </p>
+                           )}
                         </Form.Group>
                         <Form.Group controlId="contactFormNote">
                            <Form.Label>Note</Form.Label>
                            <Form.Control
                               as="textarea"
+                              aria-invalid={errors.note ? "true" : "false"}
                               className={errors.note ? "error" : ""}
                               type="text"
                               {...register("note", {
@@ -134,7 +137,9 @@ export const ContactForm: React.FC<IContactFormProps> = () => {
                               })}
                            />
                            {errors.note && errors.note.type === "required" && (
-                              <p className="errorText">{errors.note.message}</p>
+                              <p className="errorText" role="alert">
+                                 {errors.note.message}
+                              </p>
                            )}
                         </Form.Group>
                         <Button variant="primary" type="submit">
@@ -150,7 +155,7 @@ export const ContactForm: React.FC<IContactFormProps> = () => {
                )} */}
             </Col>
             {/* Submission List  */}
-            <Col>
+            <Col className="col-12 col-md-6">
                {submissions.map((user: any, index: number) => (
                   <UserCard
                      key={index}

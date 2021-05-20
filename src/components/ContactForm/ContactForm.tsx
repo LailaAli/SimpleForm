@@ -14,7 +14,12 @@ interface IContactFormProps {
    methods?: any;
 }
 
-const defaultValues = { firstName: "", lastName: "", email: "", note: "" };
+const defaultValues: IContactForm = {
+   firstName: "",
+   lastName: "",
+   email: "",
+   note: "",
+};
 
 export const ContactForm: React.FC<IContactFormProps> = () => {
    // List of form submissions

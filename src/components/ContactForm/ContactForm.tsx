@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { IContactForm } from "../../common/interfaces/IContactForm";
 // Components
 import { UserCard } from "../UserCard/UserCard";
@@ -8,11 +8,12 @@ import { Form, Button, Card, Container, Row, Col } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 // API
 import { getDataFromLocal, storeToLocal } from "../../api/localStorageApi";
+import { clearTimeout } from "timers";
 
 // Interfaces
-interface IContactFormProps {
-   methods?: any;
-}
+// interface IContactFormProps {
+//    methods?: any;
+// }
 
 const defaultValues: IContactForm = {
    firstName: "",
@@ -21,20 +22,22 @@ const defaultValues: IContactForm = {
    note: "",
 };
 
-export const ContactForm: React.FC<IContactFormProps> = () => {
+export const ContactForm: React.FC = () => {
    // List of form submissions
    const [submissions, setSubmissions] = useState<IContactForm[]>(() =>
       getDataFromLocal("data")
    );
 
+   const timeOutRef = useRef<ReturnType<typeof setTimeout>>();
+
    // Hide success message
-   //  const [hideSuccessMessage, setHideSuccessMessage] = useState<boolean>(false);
+   const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
 
    const {
       register,
       handleSubmit,
       reset,
-      formState: { errors, isSubmitSuccessful, isSubmitted },
+      formState: { errors, isSubmitSuccessful, isSubmitted, isValid },
       setFocus,
    } = useForm<IContactForm>();
 
@@ -42,8 +45,10 @@ export const ContactForm: React.FC<IContactFormProps> = () => {
    const onSubmit = (data: IContactForm) => {
       const newData = [...submissions, data];
       setSubmissions(newData);
-      // hideMessage();
-      storeToLocal("data", newData);
+      showMessage();
+      // Optional: Call store to local in useEffect
+
+      // storeToLocal("data", newData);
       reset(defaultValues);
    };
 
@@ -52,21 +57,41 @@ export const ContactForm: React.FC<IContactFormProps> = () => {
       const newSubmissions = submissions;
       newSubmissions.splice(index, 1);
       setSubmissions([...newSubmissions]);
-      storeToLocal("data", submissions);
+      // storeToLocal("data", submissions);
    };
 
    // Hide seems to only run the first time the form is submitted not every time.
    // Hide success message
-   //  const hideMessage = () => {
-   //     setTimeout(() => {
-   //        setHideSuccessMessage(true);
-   //     }, 1400);
-   //  };
+   const showMessage = () => {
+      if (isValid) {
+         setShowSuccessMessage(true);
+      } else {
+         console.log(errors);
+      }
+      timeOutRef.current = setTimeout(() => {
+         setShowSuccessMessage(false);
+      }, 1400);
+   };
+
+   useEffect(() => {
+      return () => {
+         timeOutRef.current && clearTimeout(timeOutRef.current);
+      };
+   }, []);
 
    // Set focus on first field on page load and form submission
    useEffect(() => {
       setFocus("firstName");
    }, [setFocus, isSubmitted]);
+
+   useEffect(() => {
+      storeToLocal("data", submissions);
+   }, [submissions]);
+
+   console.log("errors", errors);
+   console.log("isSubmitSuccessful", isSubmitSuccessful);
+   console.log("isSubmitted", isSubmitted);
+   console.log("hide msg", showSuccessMessage);
 
    return (
       <Container className="pt-5">
@@ -153,11 +178,11 @@ export const ContactForm: React.FC<IContactFormProps> = () => {
                      </Form>
                   </Card.Body>
                </Card>
-               {/* {isSubmitSuccessful && isSubmitted && !hideSuccessMessage && (
+               {showSuccessMessage && (
                   <p className="mt-2 text-success text-md-center">
                      Your message has been sent!
                   </p>
-               )} */}
+               )}
             </Col>
             {/* Submission List  */}
             <Col className="col-12 col-md-6">
